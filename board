@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+void PrintBoard(char board[30][80]);
+void UpdateBoard(char words[3][10],char board[30][80]);
+void MoveWords(char board[30][80]);
+
+int main(){
+	char board[30][80];
+	for(int w = 0; w < 30; w++){
+		for(int i = 0; i < 80; i++){
+			board[w][i] = ' ';
+		}
+	}
+	char words[3][10] = {
+		{'c','a','t'},
+		{'r','a','t'},
+		{'s','a','t'}
+	};
+	srand(time(NULL));
+	PrintBoard(board);
+	UpdateBoard(words,board);
+	PrintBoard(board);
+}
+
+void PrintBoard(char board[30][80]){
+	printf(" ");
+	for(int j = 0; j < 8; j++)
+		printf("----------");
+	printf("\n");
+	for(int i = 0; i < 30; i++){
+		printf("|");
+		for(int w = 0; w < 80; w++){
+			printf("%c", board[i][w]);
+			if(w == 79)
+				printf("|\n");
+		}
+	}
+}
+
+void UpdateBoard(char words[3][10],char board[30][80]){
+	int temp = rand() % 38; //need to add a strlen() function to make it the proper size from the end of the board
+	int randword = rand() % 3;
+	for(int i = 0; i < 3; i++){
+		board[0][temp+i] = words[randword][i];
+	MoveWords(board);
+	}
+	
+}
+
+void MoveWords(char board[30][80]){
+	
