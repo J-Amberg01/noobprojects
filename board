@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 void PrintBoard(char board[30][80]);
 void UpdateBoard(char words[3][10],char board[30][80]);
 void MoveWords(char board[30][80]);
+void GenerateWord(FILE *fileName, char* randomWords);
 
 int main(){
 	char board[30][80];
+	int userWants;
 	for(int w = 0; w < 30; w++){
 		for(int i = 0; i < 80; i++){
 			board[w][i] = ' ';
@@ -18,10 +21,28 @@ int main(){
 		{'r','a','t'},
 		{'s','a','t'}
 	};
+	printf("Hello, this is a typing game. You will need to type the words as they appear.\nWould you like to play or add a word?\nYou currently have %d words that can be used. (Type 'p' for play or 'a' to add words)", wordLeft);
+	scanf(" %c", &playOrAdd);
+	while(playOrAdd == 'a'){
+		FILE *fp = fopen("wordList.txt", "a+");
+		printf("Type a word that you want to add(one word, no spaces)\n");
+		scanf(" %s",userAddWord);
+		fprintf(fp, "\n");
+		fprintf(fp, "%s", userAddWord);  //appends words to the end of the file
+		printf("Your word has been added.\n Would you like to add another word? (Type 'p' or 'a')\n");
+		scanf(" %c", &playOrAdd);
+	}
+	FILE *fp = fopen("wordList.txt", "r+");
 	srand(time(NULL));
-	PrintBoard(board);
-	UpdateBoard(words,board);
-	PrintBoard(board);
+	printf("Enter 1 to play or anything else to exit\n");
+	scanf(" %d", &userWants);
+	while(userWants == 'p'){
+		UpdateBoard(words, board, fp);
+		printf("Enter 1 to keep playing\n");
+		scanf(" %d", &userWants);
+	}
+	
+		
 }
 
 void PrintBoard(char board[30][80]){
@@ -39,15 +60,30 @@ void PrintBoard(char board[30][80]){
 	}
 }
 
-void UpdateBoard(char words[3][10],char board[30][80]){
-	int temp = rand() % 38; //need to add a strlen() function to make it the proper size from the end of the board
-	int randword = rand() % 3;
+void UpdateBoard(char words[3][10],char board[30][80], FILE *fileName){
+	int temp = rand() % 77; //need to add a strlen() function to make it the proper size from the end of the board
+	int randWord = rand() % 3;
+	MoveWords(board);
 	for(int i = 0; i < 3; i++){
 		board[0][temp+i] = words[randword][i];
-	MoveWords(board);
 	}
-	
+	PrintBoard(board);
 }
 
 void MoveWords(char board[30][80]){
-	
+	for(int i = 29; i >= 0; i--){
+		for(int j = 0; j < 79; j++){
+ 			if(board[i][j] != ' '){
+				if(i == 29){
+					printf("Game Over");
+					exit(0);
+				}
+				else{
+					board[i+1][j] = board[i][j]; //this function moves the words down and then resets the space to blank
+					board[i][j] = ' ';
+				}
+			}
+		}
+	}
+}
+
