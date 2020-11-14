@@ -6,7 +6,6 @@
 void PrintBoard(char board[30][80]);
 void UpdateBoard(char words[3][10],char board[30][80]);
 void MoveWords(char board[30][80]);
-void GenerateWord(FILE *fileName, char* randomWords);
 
 int main(){
 	char board[30][80];
